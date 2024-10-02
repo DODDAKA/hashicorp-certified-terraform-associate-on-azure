@@ -117,6 +117,9 @@ az account list
 
 # Set Specific Subscription (if we have multiple subscriptions)
 az account set --subscription="SUBSCRIPTION_ID"
+# To show current az account
+az account show
+
 ```
 
 ### Step-07-03: Install Terraform 
