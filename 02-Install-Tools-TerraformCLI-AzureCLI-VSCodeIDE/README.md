@@ -92,6 +92,8 @@ az account list
 
 # Set Specific Subscription (if we have multiple subscriptions)
 az account set --subscription="SUBSCRIPTION_ID"
+
+az account show
 ```
 
 ## Step-06: Install Git Client
