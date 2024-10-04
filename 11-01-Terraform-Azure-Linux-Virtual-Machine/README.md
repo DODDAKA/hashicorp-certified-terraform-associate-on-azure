@@ -47,6 +47,8 @@ icacls "terraform-azure.pem" /inheritance:r /grant:r "Everyone:(R)"
 ### Below one is more approprivate than above one #####
 icacls ./ssh-keys/terraform-azure.pem /inheritance:r /grant:r "$($env:USERNAME):(R)" /remove "Everyone"
 
+########### Authorized keys will present in below location #############
+/home/azureuser/.ssh/authorized_keys
 
 ```  
 
@@ -291,6 +293,9 @@ By default, the corresponding public key will be saved in a file called terrafor
 The .pem extension indicates the file is in the PEM format, as specified by the -m PEM flag.
 Summary:
 This command generates a 4096-bit RSA key pair, with the private key saved in PEM format in the file terraform-azure.pem. The public key will be saved in a separate file terraform-azure.pem.pub. The key includes a comment "azureuser@myserver" for identification purposes. This could be useful in cloud deployments such as Azure (especially when using Terraform to manage infrastructure), where the SSH key is used to authenticate the user azureuser to a server named myserver.
+
+ssh -i ./ssh-keys/terraform-azure.pem azureuser@172.191.44.68
+
 
 ########## AZ Login issues ######
 If az login having issues use az login --use-device-code
