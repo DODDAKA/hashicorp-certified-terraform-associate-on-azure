@@ -41,6 +41,10 @@ Private Key: terraform-azure.pem
 
 # Permissions for Pem file
 chmod 400 terraform-azure.pem
+
+## Permission using powershell to all users
+icacls "terraform-azure.pem" /inheritance:r /grant:r "Everyone:(R)"
+
 ```  
 
 ## Step-03: c1-versions.tf - Create Terraform & Provider Blocks 
@@ -284,6 +288,14 @@ By default, the corresponding public key will be saved in a file called terrafor
 The .pem extension indicates the file is in the PEM format, as specified by the -m PEM flag.
 Summary:
 This command generates a 4096-bit RSA key pair, with the private key saved in PEM format in the file terraform-azure.pem. The public key will be saved in a separate file terraform-azure.pem.pub. The key includes a comment "azureuser@myserver" for identification purposes. This could be useful in cloud deployments such as Azure (especially when using Terraform to manage infrastructure), where the SSH key is used to authenticate the user azureuser to a server named myserver.
+
+########## AZ Login issues ######
+If az login having issues use az login --use-device-code
+az --version
+az account clear
+az account list
+az account set --subscription="SUBSCRIPTION_ID"
+az account show
 
 ## References 
 1. [Azure Resource Group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group)
