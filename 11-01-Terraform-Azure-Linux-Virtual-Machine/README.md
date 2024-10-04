@@ -67,6 +67,13 @@ terraform {
 provider "azurerm" {
  features {}          
 }
+##############
+You can use below one as well. If you are faing Error: subscription_id is a required provider property when performing a plan/apply operation
+
+provider "azurerm" {
+  features {}
+  use_cli = true
+}
 
 # Random String Resource
 resource "random_string" "myrandom" {
@@ -171,6 +178,14 @@ resource "azurerm_linux_virtual_machine" "mylinuxvm" {
 }
 ```
 
+In the Terraform code snippet, the public SSH key is being used to provision the Azure Linux VM. The reason for using the public key during VM provisioning rather than the private key lies in how SSH key-based authentication works.
+
+SSH Key Authentication Overview
+SSH key-based authentication uses a key pair: a public key and a private key.
+The public key is placed on the server (in this case, the Azure Linux VM).
+The private key is kept securely on the client machine (the machine from which you connect to the VM).
+When the client attempts to connect to the VM, the private key is used to authenticate the connection, and the server (VM) uses the public key to verify that the private key matches it
+
 ## Step-10: app1-cloud-init.txt
 ```t
 #cloud-config
@@ -237,6 +252,38 @@ terraform destroy
 rm -rf .terraform*
 rm -rf terraform.tfstate*
 ```
+ssh-keygen \
+    -m PEM \
+    -t rsa \
+    -b 4096 \
+    -C "azureuser@myserver" \
+    -f terraform-azure.pem
+1. ssh-keygen:
+This is the command to generate an SSH key pair. SSH key pairs consist of a public and private key, which are used for secure authentication.
+
+2. -m PEM:
+This flag specifies the format of the key file.
+PEM stands for Privacy-Enhanced Mail, which is a base64 encoded format for key files.
+By default, ssh-keygen generates the private key in OpenSSH format (since OpenSSH 7.8), but some applications (such as older SSH versions or other tools) may require the key to be in the PEM format, which is why this flag is used.
+3. -t rsa:
+This specifies the type of the key to be generated. In this case, rsa refers to the RSA algorithm.
+RSA (Rivest-Shamir-Adleman) is a widely used public-key cryptosystem. This command generates an RSA key pair.
+4. -b 4096:
+This flag specifies the number of bits in the key.
+4096 bits is considered a very strong level of encryption, offering greater security than the default value of 2048 bits.
+The higher the number of bits, the more computationally expensive the encryption process is, but it’s also more secure.
+5. -C "azureuser@myserver":
+The -C option is used to add a comment to the key, which is useful for identifying keys later.
+In this case, the comment is "azureuser@myserver", meaning the key is for the user "azureuser" logging into a server identified as "myserver."
+This comment appears at the end of the public key when viewed, but does not affect its functionality.
+6. -f terraform-azure.pem:
+This flag specifies the filename where the private key will be saved.
+The name terraform-azure.pem is provided, which means:
+The private key will be saved in a file called terraform-azure.pem.
+By default, the corresponding public key will be saved in a file called terraform-azure.pem.pub in the same location.
+The .pem extension indicates the file is in the PEM format, as specified by the -m PEM flag.
+Summary:
+This command generates a 4096-bit RSA key pair, with the private key saved in PEM format in the file terraform-azure.pem. The public key will be saved in a separate file terraform-azure.pem.pub. The key includes a comment "azureuser@myserver" for identification purposes. This could be useful in cloud deployments such as Azure (especially when using Terraform to manage infrastructure), where the SSH key is used to authenticate the user azureuser to a server named myserver.
 
 ## References 
 1. [Azure Resource Group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group)
