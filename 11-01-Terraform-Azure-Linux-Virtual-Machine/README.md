@@ -44,6 +44,9 @@ chmod 400 terraform-azure.pem
 
 ## Permission using powershell to all users
 icacls "terraform-azure.pem" /inheritance:r /grant:r "Everyone:(R)"
+### Below one is more approprivate than above one #####
+icacls ./ssh-keys/terraform-azure.pem /inheritance:r /grant:r "$($env:USERNAME):(R)" /remove "Everyone"
+
 
 ```  
 
