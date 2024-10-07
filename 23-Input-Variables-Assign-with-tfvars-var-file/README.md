@@ -45,6 +45,7 @@ terraform fmt
 # Review the terraform plan
 terraform plan -var-file="dev.tfvars"
 terraform plan -var-file="qa.tfvars"
+**## terraform.tfvars file load during plan and apply but if there are any variables in common both terraform.tfvars and dev.tfvars then dev.tfvars variables have more priority because we are using with -var-file**
 
 # Terraform Apply - Dev Environment
 terraform apply -var-file="dev.tfvars"
